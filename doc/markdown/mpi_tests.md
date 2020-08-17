@@ -112,7 +112,7 @@ On rank [2] : path/to/test.cpp:35: CHECK( x==-1 ) is NOT correct!
 [doctest] Status: FAILURE!
 ```
 
-### Other reporters
+### MpiFileReporter
 The ```MpiFileReporter``` will just print the result of each process in its own file, named ```doctest_[rank].log```. Only use this reporter as a debug facility if you want to know what is going on exactly when a parallel test case is failing.
 
 ### Other reporters
@@ -125,10 +125,10 @@ This feature is provided to unit-test mpi-distributed code. It is **not** a way 
 
 ## TODO
 
- * Pass ```s``` member variable of ```ConsoleReporter``` as an argument to member functions so we can use them with another object (would help factorize ```MPIConsoleReporter```)
- * Exception handling
+ * Pass ```s``` member variable of ```ConsoleReporter``` as an argument to member functions so we can use them with another object (would help to factorize ```MPIConsoleReporter```)
+ * Exception handling: nothing tested
  * If the number of processes is not enought, prints the correct message, but then deadlocks (comes from ```MPI_Probe``` in ```MpiConsoleReporter```)
- * seems to be C++17 because of [[maybe_unused]]
- * More testing
- * Packaging: create a new target? (probably cleaner to depend explicitly on MPI for mpi/doctest.h)
- * Later: have a general mechanism to represent assertion so we can separate the report format (console, xml, junit...) from the reporting strategy (sequential vs. MPI)
+ * [[maybe_unused]] is C++17
+ * More testing, automatic testing
+ * Packaging: create a new target ```mpi_doctest```? (probably cleaner to depend explicitly on MPI for mpi/doctest.h)
+ * Later, maybe: have a general mechanism to represent assertions so we can separate the report format (console, xml, junit...) from the reporting strategy (sequential vs. MPI)
