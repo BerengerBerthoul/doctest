@@ -2,7 +2,7 @@
 
 [Bruno Maugars and Bérenger Berthoul, ONERA]
 
-Testing code over distributed processes requires support from the testing framework. The doctest support for MPI parallel communication is provided in the ```"doctest/mpi/doctest.h"``` header.
+Testing code over distributed processes requires support from the testing framework. **Doctest** support for MPI parallel communication is provided in the ```"doctest/mpi/doctest.h"``` header.
 
 ## Example
 
@@ -31,16 +31,11 @@ MPI_TEST_CASE("test over two processes",2) { // Parallel test on 2 processes
 }
 ```
 
-You need to launch the unit tests with the mpirun command.
-```
-mpirun -np 2 unit_test_executable.exe
-```
-
-An ```MPI_TEST_CASE``` is like a regular ```TEST_CASE```, except it takes a second argument, which is the number of processes needed to run the test.  If the number of processes is less than 2, the test will fail. If number of processes is greater than or equal to 2, it will create a sub-communicator over 2 processes, called ```test_comm```. Three objects are provided by ```MPI_TEST_CASE```: 
- * ```test_comm```, of type ```MPI_Comm``` the mpi communicator on which the test is running
- * ```test_rank``` and ```test_nb_procs```, two ```int``` giving respectively the rank of the current process and the size of the communicator for ```test_comm```.
-
-The last two are just here for convenience and we always have:
+An ```MPI_TEST_CASE``` is like a regular ```TEST_CASE```, except it takes a second argument, which is the number of processes needed to run the test.  If the number of processes is less than 2, the test will fail. If the number of processes is greater than or equal to 2, it will create a sub-communicator over 2 processes, called ```test_comm```, and execute the test over these processes. Three objects are provided by ```MPI_TEST_CASE```: 
+ * ```test_comm```, of type ```MPI_Comm```: the mpi communicator on which the test is running,
+ * ```test_rank``` and ```test_nb_procs```, two ```int``` giving respectively the rank of the current process and the size of the communicator for ```test_comm```. These last two are just here for convenience and could be retrived from ```test_comm```.
+ 
+We always have:
 
 ```c++
 MPI_TEST_CASE("my_test",N) {
@@ -50,9 +45,14 @@ MPI_TEST_CASE("my_test",N) {
 ```
 
 ### Assertions
-It is possible to use regular assertions in an ```MPI_TEST_CASE```. MPI-specific assertion are also provided and are all prefixed with ```MPI_``` (```MPI_CHECK```, ```MPI_ASSERT```...).
+It is possible to use regular assertions in an ```MPI_TEST_CASE```. MPI-specific assertions are also provided and are all prefixed with ```MPI_``` (```MPI_CHECK```, ```MPI_ASSERT```...). The first argument is the rank for which they are checked, and the second is the usual expression to check.
 
 ## The main entry points and mpi reporters
+
+You need to launch the unit tests with an ```mpirun``` command:
+```
+mpirun -np 2 unit_test_executable.exe
+```
 
 ```MPI_Init``` should be called before running the unit tests. Also, using the default console reporter will result in each process writing everything in the same place, which is not what we want. Two reporters are provided and can be enabled. A complete ```main()``` would be:
 
@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
 
 ### MpiConsoleReporter
 
-The ```MpiConsoleReporter``` should be substituted to the default reporter. It does the same as the default console reporter for regular assertions, but only output process 0. For MPI test cases, if there is a failure it tells the process that failed
+The ```MpiConsoleReporter``` should be substituted to the default reporter. It does the same as the default console reporter for regular assertions, but only outputs on process 0. For MPI test cases, if there is a failure it tells the process that failed
 
 ```
 [doctest] doctest version is "2.4.0"
@@ -110,7 +110,7 @@ On rank [2] : path/to/test.cpp:35: CHECK( x==-1 ) is NOT correct!
 [doctest] fail on rank:     
     -> On rank [2] with 1 test failed
 [doctest] Status: FAILURE!
-```MpiFileReporter
+```
 
 ### Other reporters
 The ```MpiFileReporter``` will just print the result of each process in its own file, named ```doctest_[rank].log```. Only use this reporter as a debug facility if you want to know what is going on exactly when a parallel test case is failing.
@@ -127,6 +127,8 @@ This feature is provided to unit-test mpi-distributed code. It is **not** a way 
 
  * Pass ```s``` member variable of ```ConsoleReporter``` as an argument to member functions so we can use them with another object (would help factorize ```MPIConsoleReporter```)
  * Exception handling
+ * If the number of processes is not enought, prints the correct message, but then deadlocks (comes from ```MPI_Probe``` in ```MpiConsoleReporter```)
+ * seems to be C++17 because of [[maybe_unused]]
  * More testing
  * Packaging: create a new target? (probably cleaner to depend explicitly on MPI for mpi/doctest.h)
  * Later: have a general mechanism to represent assertion so we can separate the report format (console, xml, junit...) from the reporting strategy (sequential vs. MPI)
