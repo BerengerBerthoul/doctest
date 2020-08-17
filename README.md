@@ -130,6 +130,7 @@ Usage:
 - [Reporters](doc/markdown/reporters.md)
 - [FAQ](doc/markdown/faq.md)
 - [Build systems](doc/markdown/build-systems.md)
+- [Distributed tests with MPI](doc/markdown/mpi_tests.md)
 - [Examples](examples)
 
 Contributing
