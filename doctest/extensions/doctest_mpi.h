@@ -28,6 +28,9 @@ struct mpi_sub_comm {
   int rank;
   MPI_Comm comm;
 
+  mpi_sub_comm( mpi_sub_comm const& ) = delete;
+  mpi_sub_comm& operator=( mpi_sub_comm const& ) = delete;
+
   mpi_sub_comm(int nb_prcs) noexcept
     : nb_procs(nb_prcs)
     , rank(-1)
