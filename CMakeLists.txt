@@ -69,11 +69,7 @@ if(${DOCTEST_WITH_MAIN_IN_STATIC_LIB})
     target_link_libraries(${PROJECT_NAME}_with_main PUBLIC ${PROJECT_NAME})
 endif()
 
-message("CMAKE_CURRENT_SOURCE_DIR::" ${CMAKE_CURRENT_SOURCE_DIR})
-message("CMAKE_SOURCE_DIR::" ${CMAKE_SOURCE_DIR})
-message("DOCTEST_WITH_TESTS::" ${DOCTEST_WITH_TESTS})
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR AND DOCTEST_WITH_TESTS)
-    message("olo")
     include(scripts/cmake/common.cmake)
 
     add_subdirectory(examples/all_features)
