@@ -13,6 +13,7 @@ int f_for_test(int rank) {
 }
 
 
+
 MPI_TEST_CASE("Parallel test on 2 processes",2) { // if MPI_SIZE < 2, report test can't be run
   // 3 objects accessible in the test:
   //    test_comm: MPI_Comm of size 2

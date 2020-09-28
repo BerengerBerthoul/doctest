@@ -8,7 +8,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     env:
-      CMAKE_GENERATOR: Ninja
+      # CMAKE_GENERATOR: Ninja
+      CMAKE_GENERATOR: Unix Makefiles
       ASAN_OPTIONS: strict_string_checks=true:detect_odr_violation=2:detect_stack_use_after_return=true:check_initialization_order=true:strict_init_order=true
       TSAN_OPTIONS: force_seq_cst_atomics=1
       CTEST_OUTPUT_ON_FAILURE: ON
@@ -213,8 +214,8 @@ jobs:
           fi
 
           sudo apt-get update
-          # sudo apt-get install libopenmpi-dev
-          # sudo apt-get install openmpi-bin
+          sudo apt-get install libopenmpi-dev
+          sudo apt-get install openmpi-bin
 
           # libc6-dbg:i386 is required for running valgrind on x86.
           sudo apt-get install -y ninja-build valgrind libc6-dbg:i386
