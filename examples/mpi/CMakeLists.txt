@@ -13,8 +13,7 @@ set(files_all
     ${files_with_output}
 )
 
-find_package(MPI REQUIRED COMPONENTS CXX)
-
+find_package(MPI COMPONENTS CXX)
 if(MPI_FOUND)
   # add the executable
   add_executable(mpi_features ${files_all})
