@@ -4079,38 +4079,38 @@ namespace {
         }
 
         FatalConditionHandler() {
-            isSet = true;
-            stack_t sigStack;
-            sigStack.ss_sp    = altStackMem;
-            sigStack.ss_size  = sizeof(altStackMem);
-            sigStack.ss_flags = 0;
-            sigaltstack(&sigStack, &oldSigStack);
-            struct sigaction sa = {};
-            sa.sa_handler       = handleSignal; // NOLINT
-            sa.sa_flags         = SA_ONSTACK;
-            for(std::size_t i = 0; i < DOCTEST_COUNTOF(signalDefs); ++i) {
-                sigaction(signalDefs[i].id, &sa, &oldSigActions[i]);
-            }
+            //isSet = true;
+            //stack_t sigStack;
+            //sigStack.ss_sp    = altStackMem;
+            //sigStack.ss_size  = sizeof(altStackMem);
+            //sigStack.ss_flags = 0;
+            //sigaltstack(&sigStack, &oldSigStack);
+            //struct sigaction sa = {};
+            //sa.sa_handler       = handleSignal; // NOLINT
+            //sa.sa_flags         = SA_ONSTACK;
+            //for(std::size_t i = 0; i < DOCTEST_COUNTOF(signalDefs); ++i) {
+            //    sigaction(signalDefs[i].id, &sa, &oldSigActions[i]);
+            //}
         }
 
         ~FatalConditionHandler() { reset(); }
         static void reset() {
-            if(isSet) {
-                // Set signals back to previous values -- hopefully nobody overwrote them in the meantime
-                for(std::size_t i = 0; i < DOCTEST_COUNTOF(signalDefs); ++i) {
-                    sigaction(signalDefs[i].id, &oldSigActions[i], nullptr);
-                }
-                // Return the old stack
-                sigaltstack(&oldSigStack, nullptr);
-                isSet = false;
-            }
+            //if(isSet) {
+            //    // Set signals back to previous values -- hopefully nobody overwrote them in the meantime
+            //    for(std::size_t i = 0; i < DOCTEST_COUNTOF(signalDefs); ++i) {
+            //        sigaction(signalDefs[i].id, &oldSigActions[i], nullptr);
+            //    }
+            //    // Return the old stack
+            //    sigaltstack(&oldSigStack, nullptr);
+            //    isSet = false;
+            //}
         }
     };
 
-    bool             FatalConditionHandler::isSet                                      = false;
-    struct sigaction FatalConditionHandler::oldSigActions[DOCTEST_COUNTOF(signalDefs)] = {};
-    stack_t          FatalConditionHandler::oldSigStack                                = {};
-    char             FatalConditionHandler::altStackMem[]                              = {};
+    //bool             FatalConditionHandler::isSet                                      = false;
+    //struct sigaction FatalConditionHandler::oldSigActions[DOCTEST_COUNTOF(signalDefs)] = {};
+    //stack_t          FatalConditionHandler::oldSigStack                                = {};
+    //char             FatalConditionHandler::altStackMem[]                              = {};
 
 #endif // DOCTEST_PLATFORM_WINDOWS
 #endif // DOCTEST_CONFIG_POSIX_SIGNALS || DOCTEST_CONFIG_WINDOWS_SEH
